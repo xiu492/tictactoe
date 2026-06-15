@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TicTacToe Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 大厅视图 -->
+    <div id="lobby-view" class="view">
+      <h1 class="title">⚔️ TicTacToe Arena</h1>
+      <div class="lobby-card glass">
+        <div class="input-group">
+          <label for="serverUrl">服务器地址</label>
+          <input type="text" id="serverUrl" value="ws://localhost:8080" placeholder="ws://localhost:8080">
+        </div>
+        <button id="connectBtn" class="primary-btn">连接</button>
+        <div id="connectionStatus" class="status disconnected">未连接</div>
+        <div class="room-actions" id="roomActions" style="display:none;">
+          <button id="createRoomBtn" class="primary-btn">创建房间</button>
+          <div class="join-group">
+            <input type="text" id="roomIdInput" placeholder="房间号" maxlength="6">
+            <button id="joinRoomBtn" class="primary-btn">加入</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 游戏视图 -->
+    <div id="game-view" class="view hidden">
+      <!-- 顶部标题栏 -->
+      <div id="titleBar" class="title-bar">
+        <h1 class="main-title">井字棋</h1>
+      </div>
+
+      <!-- 左上角退出按钮 -->
+      <button id="quitBtn" class="icon-btn quit-btn" title="退出房间">✕</button>
+
+      <!-- 左下角房间号水印 -->
+      <div id="roomWatermark" class="watermark">Room: —</div>
+
+      <!-- 信息面板（棋盘上方） -->
+      <div id="infoPanel" class="info-panel glass">
+        <div id="scoreBoard" class="scoreboard">
+          <span class="score-x">✗ <span id="scoreX">0</span></span>
+          <span class="score-divider">:</span>
+          <span class="score-o"><span id="scoreO">0</span> ○</span>
+        </div>
+        <div id="turnIndicator" class="turn-indicator">等待对手加入</div>
+      </div>
+
+      <!-- 棋盘 -->
+      <div id="board" class="board">
+        <!-- 网格线层 -->
+        <div class="grid-lines">
+          <div class="grid-line grid-line-h grid-line-h-1"></div>
+          <div class="grid-line grid-line-h grid-line-h-2"></div>
+          <div class="grid-line grid-line-v grid-line-v-1"></div>
+          <div class="grid-line grid-line-v grid-line-v-2"></div>
+          <!-- 外框 -->
+          <div class="grid-border"></div>
+        </div>
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+      </div>
+
+      <!-- 投降按钮 -->
+      <button id="surrenderBtn" class="surrender-btn glass hidden">🏳️ Surrender</button>
+
+      <!-- 右上角聊天记录 -->
+      <div id="chatHistory" class="chat-history glass">
+        <!-- 动态插入消息 -->
+      </div>
+
+      <!-- 右下角聊天输入 -->
+      <div id="chatInputArea" class="chat-input-area glass">
+        <input type="text" id="chatInput" placeholder="输入消息..." maxlength="200">
+        <button id="sendChatBtn" class="icon-btn send-btn">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
