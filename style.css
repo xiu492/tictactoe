@@ -14,7 +14,7 @@ body {
   align-items: center;
   min-height: 100vh;
   height: 100vh;
-  overflow: hidden; /* 防止整体页面滚动，游戏内容内部自行滚动 */
+  overflow: hidden;
   padding: 0;
   margin: 0;
 }
@@ -60,6 +60,8 @@ button {
   border: none;
   outline: none;
   transition: all 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .primary-btn {
@@ -170,8 +172,10 @@ button {
 
 /* ====== 游戏视图 ====== */
 #game-view {
-  justify-content: flex-start; /* 让内容从顶部开始排列 */
+  justify-content: flex-start;
   padding-top: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 顶部标题栏 */
@@ -183,7 +187,6 @@ button {
   align-items: center;
   background: rgba(20, 20, 30, 0.4);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -191,7 +194,7 @@ button {
   font-size: 1.8rem;
   font-weight: 800;
   color: #ffffff;
-  text-shadow: 0 0 12px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.4), 0 0 36px rgba(255, 255, 255, 0.2);
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
   letter-spacing: 6px;
   margin: 0;
 }
@@ -204,31 +207,33 @@ button {
   color: #ef4444;
   font-size: 1.8rem;
   font-weight: 300;
+  z-index: 20;
 }
 
 /* 左下角房间水印 */
 .watermark {
   position: absolute;
-  bottom: 1.2rem;
-  left: 1.2rem;
+  bottom: 1rem;
+  left: 1rem;
   font-size: 0.85rem;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 500;
-  letter-spacing: 1px;
   pointer-events: none;
-  z-index: 0;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 16px rgba(255, 255, 255, 0.3);
+  z-index: 10;
+  text-shadow: 0 0 4px rgba(0,0,0,0.5);
 }
 
 /* 信息面板 */
 .info-panel {
   width: 90%;
   max-width: 360px;
-  margin: 0.8rem auto 0.4rem;
+  margin: 0.8rem auto 0.8rem;
   padding: 0.8rem 1.2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .scoreboard {
@@ -251,153 +256,151 @@ button {
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* 棋盘 */
+/* 棋盘 — 无间隙网格 + 发光白线边框 */
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 0;                    /* 关键：无间隙，边框直接相邻形成网格线 */
   width: 90vmin;
   max-width: 360px;
   aspect-ratio: 1 / 1;
-  margin: 0.5rem auto;
-  position: relative;
-}
-
-/* 网格线层 */
-.grid-lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.grid-line {
-  position: absolute;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.4), 0 0 24px rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-}
-
-/* 水平线 */
-.grid-line-h {
-  height: 3px;
-  left: 5%;
-  right: 5%;
-}
-.grid-line-h-1 {
-  top: calc(33.33% - 1.5px);
-}
-.grid-line-h-2 {
-  top: calc(66.66% - 1.5px);
-}
-
-/* 垂直线 */
-.grid-line-v {
-  width: 3px;
-  top: 5%;
-  bottom: 5%;
-}
-.grid-line-v-1 {
-  left: calc(33.33% - 1.5px);
-}
-.grid-line-v-2 {
-  left: calc(66.66% - 1.5px);
-}
-
-/* 外框发光边框 */
-.grid-border {
-  position: absolute;
-  top: 2%;
-  left: 2%;
-  right: 2%;
-  bottom: 2%;
-  border: 3px solid #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
+  margin: 0 auto;
+  background: rgba(20, 20, 30, 0.5);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 0 4px rgba(0,0,0,0.2);
 }
 
 .cell {
-  background: rgba(30, 30, 45, 0.7);
-  backdrop-filter: blur(5px);
-  border-radius: 16px;
+  background: rgba(30, 30, 45, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 4rem;
   font-weight: 700;
-  color: #f1f5f9;
   transition: all 0.15s ease;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  position: relative;
-  z-index: 2;
+  aspect-ratio: 1 / 1;
+  /* 发光边框：右侧 + 下边框（所有格子共用） */
+  border-right: 2px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 0 4px rgba(255, 255, 255, 0.4),
+    inset 0 0 2px rgba(255, 255, 255, 0.2);
 }
-.cell:active {
-  transform: scale(0.95);
+
+/* 移除第3列（最右侧）的右边框，避免多余 */
+.cell:nth-child(3n) {
+  border-right: none;
+}
+/* 移除最后一行（第7、8、9个）的下边框 */
+.cell:nth-child(n+7) {
+  border-bottom: none;
 }
 
 /* 可落子高亮 */
-.cell.available:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
+.cell.available:active {
+  background: rgba(59, 130, 246, 0.3);
 }
 
-/* 已落子样式 */
-.cell.x { color: #ef4444; }
-.cell.o { color: #3b82f6; }
+.cell.x { color: #ef4444; text-shadow: 0 0 8px rgba(239,68,68,0.6); }
+.cell.o { color: #3b82f6; text-shadow: 0 0 8px rgba(59,130,246,0.6); }
 .cell.disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.7;
+}
+
+/* 控制栏（投降 + 聊天输入） */
+.game-controls {
+  width: 90%;
+  max-width: 360px;
+  margin: 1.2rem auto 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 /* 投降按钮 */
 .surrender-btn {
-  display: block;
-  margin: 0.6rem auto;
-  padding: 10px 28px;
+  flex: 1;
+  padding: 10px 16px;
   font-size: 1rem;
   font-weight: 600;
   color: #f1f5f9;
-  border-radius: 30px;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  transition: all 0.2s;
+  border-radius: 40px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 100px;
 }
 .surrender-btn:hover {
-  background: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.35);
 }
 
-/* 聊天记录（右上角） */
+/* 聊天输入区（移至控制栏） */
+.chat-input-area {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 40px;
+  background: rgba(20, 20, 30, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.chat-input-area input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  padding: 10px 5px;
+  outline: none;
+}
+.chat-input-area input::placeholder {
+  color: #94a3b8;
+}
+.send-btn {
+  font-size: 1.2rem;
+  color: #3b82f6;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+}
+
+/* 聊天记录（右上角，透明半浮层） */
 .chat-history {
   position: absolute;
-  top: 0.8rem;
+  top: 4.5rem;
   right: 0.8rem;
-  width: 45%;
+  width: 44%;
   max-width: 200px;
-  max-height: 8em; /* 大约5行文字高度 */
+  max-height: 7.5em;
   overflow-y: auto;
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
   font-size: 0.75rem;
-  line-height: 1.5;
-  color: #cbd5e1;
-  background: rgba(20, 20, 30, 0.5);
-  backdrop-filter: blur(10px);
+  line-height: 1.4;
+  color: #e2e8f0;
+  background: rgba(10, 10, 15, 0.65);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  /* 隐藏滚动条 */
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
   -ms-overflow-style: none;
+  z-index: 15;
+  pointer-events: auto;
 }
 .chat-history::-webkit-scrollbar {
   display: none;
 }
 
 .chat-history .msg {
-  margin-bottom: 3px;
-  word-break: break-all;
+  margin-bottom: 4px;
+  word-break: break-word;
 }
 .msg .sender {
   font-weight: 600;
@@ -412,49 +415,36 @@ button {
   margin-left: 4px;
 }
 
-/* 聊天输入区（右下角） */
-.chat-input-area {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 30px;
-  background: rgba(20, 20, 30, 0.5);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.chat-input-area input {
-  border: none;
-  background: transparent;
-  color: #f1f5f9;
-  font-size: 0.9rem;
-  padding: 6px 8px;
-  width: 120px;
-  outline: none;
-}
-.chat-input-area input::placeholder {
-  color: #64748b;
-}
-.send-btn {
-  font-size: 1.2rem;
-  color: #3b82f6;
-}
-
-/* 响应式微调 */
-@media (max-width: 400px) {
+/* 响应式微调：更小屏幕 */
+@media (max-width: 480px) {
   .board {
     gap: 6px;
     width: 85vmin;
   }
   .cell {
-    border-radius: 12px;
     font-size: 3rem;
+    border-radius: 16px;
   }
   .chat-history {
     width: 40%;
+    top: 4rem;
     max-height: 6.5em;
+  }
+  .info-panel {
+    margin: 0.5rem auto;
+    padding: 0.6rem 0.8rem;
+  }
+  .scoreboard {
+    font-size: 1.2rem;
+  }
+  .turn-indicator {
+    font-size: 0.85rem;
+  }
+  .game-controls {
+    gap: 8px;
+  }
+  .surrender-btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 }
